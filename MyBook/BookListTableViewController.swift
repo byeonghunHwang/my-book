@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Foundation
 
 class BookListTableViewController: UITableViewController {
     
@@ -44,14 +45,23 @@ class BookListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-        let book = self.books[indexPath.row]
         
-        cell.textLabel?.text = book.title
-        cell.detailTextLabel?.text = book.writer
-        cell.imageView?.image = book.coverImage
-        
+        if let bookCell = cell as? BookTableViewCell {
+            let book = self.books[indexPath.row]
+            
+            let numFormatter: NumberFormatter = NumberFormatter()
+            numFormatter.numberStyle = NumberFormatter.Style.decimal
+            
+            let price = book.price
+            let priceStr = numFormatter.string(from: NSNumber(integerLiteral: price))
+            
+            bookCell.bookTitleLabel.text = book.title
+            bookCell.bookWriterLabel.text = book.writer
+            bookCell.bookPriceLabel.text = priceStr
+            bookCell.bookImageView.image = book.coverImage
+            
+            return bookCell
+        }
         return cell
     }
  
@@ -107,6 +117,25 @@ class BookListTableViewController: UITableViewController {
            detailVC.book = self.books[idx.row]
         }
     }
- 
+}
 
+
+class BookTableViewCell: UITableViewCell {
+    
+    @IBOutlet weak var bookImageView: UIImageView!
+    @IBOutlet weak var bookTitleLabel: UILabel!    
+    @IBOutlet weak var bookWriterLabel: UILabel!
+    @IBOutlet weak var bookPriceLabel: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        
+        // Configure the view for the selected state
+    }
+    
 }

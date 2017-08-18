@@ -38,7 +38,7 @@ class AddBookViewController: UIViewController {
                 optPrice = nil
             }
             
-            let book = Book(title: title, writer: writerTextField.text, publisher: publisherTextField.text, coverImage: coverImageView.image, price: optPrice, description: descriptionTextView.text, url: urlTextField.text)
+            let book = Book(title: title, writer: writerTextField.text, publisher: publisherTextField.text, coverImage: coverImageView.image, price: optPrice, desc: descriptionTextView.text, url: urlTextField.text)
             
             if let prevVC = delegate {
                 prevVC.sendNewBook(book: book)

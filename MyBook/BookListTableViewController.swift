@@ -12,20 +12,31 @@ import Foundation
 class BookListTableViewController: UITableViewController, AddBookDelegate {
     
     var books:[Book] = Array()
+    
+    func getFilePath(withFileName fileName:String) -> String {
+        let dirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let docDir = dirPath[0] as NSString
+        print(docDir)
+        
+        let filePath = docDir.appendingPathComponent(fileName)
+        
+        return filePath
+    }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let book1 = Book(title: "결국 이기는 사람들의 비밀", writer: "리웨이원", publisher: "갤리온", coverImage: UIImage(named:"book1.jpg")!, price: 15000, description: "불공평한 세상에서 발견한 10가지 성공 법칙", url: "http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&linkClass=150101&barcode=9788901218137")
-        let book2 = Book(title: "뭘 해도 되는 사람", writer: "질 해슨", publisher: "유노북스", coverImage: UIImage(named:"book2.jpg")!, price: 14000, description: "가능성을 끌어올리는 마법", url: "http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&linkClass=150101&barcode=9791186665626")
-        let book3 = Book(title: "나는 왜 작은 일에도 상처받을까 ", writer: "다장쥔궈", publisher: "비즈니스북스", coverImage: UIImage(named:"book3.jpg")!, price: 14500, description: "있는 그대로의 나로 행복해지는 변화를 경험하라!", url: "http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&linkClass=150605&barcode=9791186805732")
+        let filePath = self.getFilePath(withFileName: "books")
         
-        let book4 = Book(title: "iPhone SDK 튜토리얼2", writer: nil, publisher: nil, coverImage: nil, price: nil, description: nil, url: nil)
+        let fileManager = FileManager.default
+        fileManager.fileExists(atPath: filePath)
         
-        self.books.append(book1)
-        self.books.append(book2)
-        self.books.append(book3)
-        self.books.append(book4)
+        if fileManager.fileExists(atPath: filePath) {
+            if let books = NSKeyedUnarchiver.unarchiveObject(withFile: filePath) as? [Book] {
+                self.books.append(contentsOf: books)
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {
